@@ -44,9 +44,6 @@ module.exports.post = (event, context, callback) => {
       FunctionName: jes_function,
       Payload: ''
     }, function(error, data) {
-      console.log('----')
-      console.log(data)
-      console.log('----')
       if (error) {
         console.error(error)
         callback(null, {
@@ -56,14 +53,44 @@ module.exports.post = (event, context, callback) => {
         });
         return;
       }
-      if(data.Payload){
-        console.log(data.Payload)
+      if(data.Payload) {
+        var sender_domain = event.build.full_url.split('/')[2].split(':')[0]
+        if (sender_domain === 'localhost' || sender_domain.includes('192.168')) {
+          sender_domain = "sm-jenkins-local.scea.com"
+        }
+
+        var sender_name = sender_domain.split('.')[0].replace(/-/g, ' ')
+        var replace_dict = {
+          'ci': 'CI',
+          'master': 'Master',
+          'jenkins': 'Jenkins',
+          'sm': 'Santa Monica',
+          'localhost': 'Local',
+          'local': 'Local'
+        }
+        Object.keys(replace_dict).forEach(function(key) {
+          sender_name = sender_name.replace(key, replace_dict[key])
+        });
+
+        // to be moved to separate lambda
+        console.log(sender_name+" <no-reply@"+sender_domain+">")
+        console.log("Failure detected in "+event.name+" #"+event.build.number)
+        console.log("investigate at: "+event.build.full_url)
+
+        var email_list = [];
+        var records = JSON.parse(JSON.parse(data.Payload).body)
+        records.forEach(function(record) {
+          if((event.url).search(record.pattern) !== -1) {
+            email_list.push(record.email)
+          }
+        });
+        console.log(email_list)
         const response = {
           statusCode: 200,
           headers: {
             'Access-Control-Allow-Origin': '*',
           },
-          body: data.Payload
+          body: {"message": "success"}
         };
         callback(null, response);
         return;
