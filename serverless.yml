@@ -1,0 +1,27 @@
+service: "jns-${env:ENV}"
+
+provider:
+  name:       aws
+  runtime:    nodejs6.10
+  region:     ${env:AWS_DEFAULT_REGION, 'us-west-2'}
+  stage:      ${opt:stage}
+  memorySize: 128
+  timeout:    2
+  environment:
+    ALLOW_CIDR: "${env:ALLOW_CIDR, 'x.x.x.x'}"
+    JES_ENDPOINT: ${env:JES_ENDPOINT, '127.0.0.1:3001'}
+
+package:
+  include:
+    - node_modules/*
+    - src/*.js
+  exclude:
+    - venv
+
+functions:
+  post:
+    handler: src/post.post
+    events:
+      - http:
+          path:   jns/job/event
+          method: post
