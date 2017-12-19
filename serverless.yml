@@ -20,7 +20,7 @@ package:
 
 functions:
   post:
-    handler: src/post.post
+    handler: src/event.event
     events:
       - http:
           path:   jns/job/event

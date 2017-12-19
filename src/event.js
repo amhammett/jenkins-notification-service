@@ -14,7 +14,7 @@ const allow_cidr = process.env.ALLOW_CIDR || 'x.x.x.x'
 const jes_endpoint = process.env.JES_ENDPOINT || 'https://127.0.0.1:3001'
 const jes_function = process.env.JES_FUNCTION || 'jes-missing-v1-list'
 
-module.exports.post = (event, context, callback) => {
+module.exports.event = (event, context, callback) => {
   var found = false;
   var error = false;
   var sourceIP = event['requestContext']
