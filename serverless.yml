@@ -10,17 +10,13 @@ provider:
 
   environment:
     ALLOW_CIDR: "${env:ALLOW_CIDR, 'x.x.x.x'}"
-    JFS_TOPIC: ${env:JFS_TOPIC, 'jfs-missing-failures'}
+    FAILURE_ENDPOINT: "jfs-${env:ENV}-failures"
 
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - SNS:ListTopics
-      Resource: "arn:aws:sns:${opt:region, self:provider.region}:*:*"
-    - Effect: Allow
-      Action:
-        - SNS:Publish
-      Resource: "arn:aws:sns:${opt:region, self:provider.region}:*:jfs-${env:ENV}-failures"
+        - Kinesis:PutRecord
+      Resource: "arn:aws:kinesis:${opt:region, self:provider.region}:*:stream/jfs-${env:ENV}-failures"
 
 package:
   include:

@@ -11,7 +11,7 @@ if (!AWS.config.region && aws_default_region) {
 }
 
 const allow_cidr = process.env.ALLOW_CIDR || 'x.x.x.x'
-const failure_topic = process.env.FAILURE_TOPIC
+const failure_stream = process.env.FAILURE_ENDPOINT
 
 module.exports.event = (event, context, callback) => {
   var found = false;
@@ -46,57 +46,29 @@ module.exports.event = (event, context, callback) => {
     && event.build.phase === 'FINALIZED'
     && event.build.status === 'FAILED'
   ) {
-    var sns = new AWS.SNS();
+    let params = {
+      StreamName: failure_stream,
+      Data: JSON.stringify(event),
+      PartitionKey: 'jns-lambda-event'
+    }
+    var kinesis = new AWS.Kinesis();
 
-    sns.listTopics(function(err, data) {
-      let topic_found = false
-      let topic_arn
-
+    kinesis.putRecord(params, function(err, data) {
       if(err) {
+        console.error(err.message)
         callback(null, {
           statusCode: 418,
-          headers: { 'Content-Type': 'text/plain' },
-          body: 'Greatness awaits.' + err.message
-        });
-        return;
-      }
-
-      data.Topics.forEach(function(topic) {
-        topic_arn = (topic.TopicArn)
-        if (failure_topic == topic_arn.split(':')[topic_arn.split(':').length - 1]) {
-          topic_found = true
-        }
-      })
-
-      if (topic_found) {
-        sns.publish({
-          Message: JSON.stringify(event),
-          TopicArn: topic_arn
-        }, function(err, data) {
-          if (err) {
-            console.log(err.stack);
-            callback(null, response = {
-              statusCode: 501,
-              headers: { 'Access-Control-Allow-Origin': '*' },
-              body: {"message": err}
-            });
-            return;
-          }
-          callback(null, {
-            statusCode: 200,
-            headers: { 'Access-Control-Allow-Origin': '*' },
-            body: {"message": "success"}
-          });
-          return;
-        })
-      } else {
-        callback(null, {
-          statusCode: 501,
           headers: { 'Content-Type': 'text/plain' },
           body: 'Greatness awaits.'
         });
         return;
       }
+      callback(null, {
+        statusCode: 200,
+        headers: { 'Access-Control-Allow-Origin': '*' },
+        body: {"message": "success"}
+      });
+      return;
     })
   }
   return;
