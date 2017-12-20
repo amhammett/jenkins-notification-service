@@ -13,7 +13,7 @@ if (!AWS.config.region && aws_default_region) {
 const allow_cidr = process.env.ALLOW_CIDR || 'x.x.x.x'
 const failure_topic = process.env.FAILURE_TOPIC
 
-module.exports.post = (event, context, callback) => {
+module.exports.event = (event, context, callback) => {
   var found = false;
   var error = false;
   var sourceIP = event['requestContext']
@@ -25,15 +25,20 @@ module.exports.post = (event, context, callback) => {
     }
   });
 
-  if (!found && sourceIP !== 'local') {
+  if (!found && sourceIP !== 'local' && sourceIP !== 'test-invoke-source-ip') {
     console.error('Requestor not in allow list')
 
     callback(null, {
       statusCode: 403,
       headers: { 'Content-Type': 'text/plain' },
-      body: '¯\\_(ツ)_/¯'+sourceIP,
+      body: '¯\\_(ツ)_/¯'
     });
     return;
+  }
+
+  if (!event.build) {
+    console.log(event)
+    event.build = JSON.parse(event.body).body
   }
 
   if(
@@ -45,40 +50,54 @@ module.exports.post = (event, context, callback) => {
 
     sns.listTopics(function(err, data) {
       let topic_found = false
+      let topic_arn
+
+      if(err) {
+        callback(null, {
+          statusCode: 418,
+          headers: { 'Content-Type': 'text/plain' },
+          body: 'Greatness awaits.' + err.message
+        });
+        return;
+      }
+
       data.Topics.forEach(function(topic) {
-        let topic_arn = (topic.TopicArn).split(':')
-        if (failure_topic == topic_arn[topic_arn.length - 1]) {
+        topic_arn = (topic.TopicArn)
+        if (failure_topic == topic_arn.split(':')[topic_arn.split(':').length - 1]) {
           topic_found = true
         }
       })
+
       if (topic_found) {
         sns.publish({
           Message: JSON.stringify(event),
-          MessageStructure: 'json',
-          TopicArn: failure_topic
+          TopicArn: topic_arn
         }, function(err, data) {
           if (err) {
             console.log(err.stack);
+            callback(null, response = {
+              statusCode: 501,
+              headers: { 'Access-Control-Allow-Origin': '*' },
+              body: {"message": err}
+            });
             return;
           }
-          const response = {
+          callback(null, {
             statusCode: 200,
-            headers: { 
-              'Access-Control-Allow-Origin': '*',
-            },
+            headers: { 'Access-Control-Allow-Origin': '*' },
             body: {"message": "success"}
-          };
-          callback(null, response);
-          context.done(null, 'Function Finished!');  
+          });
+          return;
         })
       } else {
         callback(null, {
           statusCode: 501,
           headers: { 'Content-Type': 'text/plain' },
-          body: 'There was a problem processing your request.' + error,
+          body: 'Greatness awaits.'
         });
         return;
       }
     })
   }
+  return;
 }

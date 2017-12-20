@@ -7,9 +7,20 @@ provider:
   stage:      ${opt:stage}
   memorySize: 128
   timeout:    2
+
   environment:
     ALLOW_CIDR: "${env:ALLOW_CIDR, 'x.x.x.x'}"
-    JES_ENDPOINT: ${env:JES_ENDPOINT, '127.0.0.1:3001'}
+    JFS_TOPIC: ${env:JFS_TOPIC, 'jfs-missing-failures'}
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - SNS:ListTopics
+      Resource: "arn:aws:sns:${opt:region, self:provider.region}:*:*"
+    - Effect: Allow
+      Action:
+        - SNS:Publish
+      Resource: "arn:aws:sns:${opt:region, self:provider.region}:*:jfs-${env:ENV}-failures"
 
 package:
   include:
@@ -19,7 +30,7 @@ package:
     - venv
 
 functions:
-  post:
+  event:
     handler: src/event.event
     events:
       - http:
