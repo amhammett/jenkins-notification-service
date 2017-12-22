@@ -10,8 +10,9 @@ if (!AWS.config.region && aws_default_region) {
   });
 }
 
+const env_name = process.env.ENV || 'missing'
 const allow_cidr = process.env.ALLOW_CIDR || 'x.x.x.x'
-const failure_stream = process.env.FAILURE_ENDPOINT
+const failure_stream = process.env.FAILURE_ENDPOINT || 'jfs-'+env_name+'failures'
 
 module.exports.event = (event, context, callback) => {
   var found = false;
