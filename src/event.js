@@ -38,9 +38,10 @@ module.exports.event = (event, context, callback) => {
   }
 
   if (!event.build) {
-    console.log(event)
     event.build = JSON.parse(event.body).body
   }
+
+  console.log('event triggered for ' +event.name+ ' with status ' +event.build.status)
 
   if(
     event.build
@@ -64,6 +65,8 @@ module.exports.event = (event, context, callback) => {
         });
         return;
       }
+      console.log('successfully put kinesis record: ')
+      console.log(data)
       callback(null, {
         statusCode: 200,
         headers: { 'Access-Control-Allow-Origin': '*' },

@@ -3,7 +3,7 @@ function_name = jns
 
 env := missing
 profile := sms-dev
-region := us-east-1
+region := us-west-2
 stage := v1
 allow_cidr := x.x.x.x
 
