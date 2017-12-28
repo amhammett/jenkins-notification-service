@@ -16,7 +16,7 @@ provider:
     - Effect: Allow
       Action:
         - Kinesis:PutRecord
-      Resource: "arn:aws:kinesis:${opt:region, self:provider.region}:*:stream/jfs-${env:ENV}-failures"
+      Resource: "arn:aws:kinesis:${opt:region, self:provider.region}:*:stream/${self:provider.environment.FAILURE_ENDPOINT}"
 
 package:
   include:
