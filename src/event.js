@@ -37,16 +37,13 @@ module.exports.event = (event, context, callback) => {
     return;
   }
 
-  if (!event.build) {
-    event.build = JSON.parse(event.body).body
-  }
-
-  console.log('event triggered for ' +event.name+ ' with status ' +event.build.status)
+  let jenkins_data = JSON.parse(event.body)
+  console.log('event triggered for ' +jenkins_data.name+ ' with status ' +jenkins_data.build.status)
 
   if(
-    event.build
-    && event.build.phase === 'FINALIZED'
-    && event.build.status === 'FAILED'
+    jenkins_data.build
+    && jenkins_data.build.phase === 'FINALIZED'
+    && jenkins_data.build.status === 'FAILED'
   ) {
     let params = {
       StreamName: failure_stream,
