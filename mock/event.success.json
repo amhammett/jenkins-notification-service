@@ -1,25 +1,59 @@
 {
-    "name": "asgard",
-    "url": "job/asgard/",
-    "build": {
-        "full_url": "http://localhost:8080/job/asgard/18/",
-        "number": 18,
-        "phase": "COMPLETED",
-        "status": "SUCCESS",
-        "url": "job/asgard/18/",
-        "scm": {
-            "url": "https://github.com/evgeny-goldin/asgard.git",
-            "branch": "origin/master",
-            "commit": "c6d86dc654b12425e706bcf951adfe5a8627a517"
-        },
-        "artifacts": {
-            "asgard.war": {
-                "archive": "http://localhost:8080/job/asgard/18/artifact/asgard.war"
-            },
-            "asgard-standalone.jar": {
-                "archive": "http://localhost:8080/job/asgard/18/artifact/asgard-standalone.jar",
-                "s3": "https://s3-eu-west-1.amazonaws.com/evgenyg-bakery/asgard/asgard-standalone.jar"
-            }
-        }
-    }
+  "resource": "/jns/job/event",
+  "path": "/jns/job/event",
+  "httpMethod": "POST",
+  "headers": {
+    "Accept": "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2",
+    "Cache-Control": "no-cache",
+    "CloudFront-Forwarded-Proto": "https",
+    "CloudFront-Is-Desktop-Viewer": "true",
+    "CloudFront-Is-Mobile-Viewer": "false",
+    "CloudFront-Is-SmartTV-Viewer": "false",
+    "CloudFront-Is-Tablet-Viewer": "false",
+    "CloudFront-Viewer-Country": "US",
+    "Content-Type": "application/json;charset=UTF-8",
+    "Host": "dgx4mt6zkh.execute-api.us-west-2.amazonaws.com",
+    "Pragma": "no-cache",
+    "User-Agent": "Java/1.8.0_111",
+    "Via": "1.1 d01884a3320364227d925bce1a38f0ad.cloudfront.net (CloudFront)",
+    "X-Amz-Cf-Id": "qZ0KvPNUM83eexqn9gI7MbZvYNSXMutwX2wkI3EYvt6Jg_GZLZvyQA==",
+    "X-Amzn-Trace-Id": "Root=1-5a44329c-6c1882de3e98874e1202cc4d",
+    "X-Forwarded-For": "160.33.43.29, 54.239.203.59",
+    "X-Forwarded-Port": "443",
+    "X-Forwarded-Proto": "https"
+  },
+  "queryStringParameters": null,
+  "pathParameters": null,
+  "stageVariables": null,
+  "requestContext": {
+    "requestTime": "27/Dec/2017:23:54:04 +0000",
+    "path": "/v1/jns/job/event",
+    "accountId": "283996957043",
+    "protocol": "HTTP/1.1",
+    "resourceId": "f84qyg",
+    "stage": "v1",
+    "requestTimeEpoch": 1514418844774,
+    "requestId": "3857e97e-eb61-11e7-b423-abc5069356d6",
+    "identity": {
+      "cognitoIdentityPoolId": null,
+      "accountId": null,
+      "cognitoIdentityId": null,
+      "caller": null,
+      "sourceIp": "160.33.43.29",
+      "accessKey": null,
+      "cognitoAuthenticationType": null,
+      "cognitoAuthenticationProvider": null,
+      "userArn": null,
+      "userAgent": "Java/1.8.0_111",
+      "user": null
+    },
+    "resourcePath": "/jns/job/event",
+    "httpMethod": "POST",
+    "apiId": "dgx4mt6zkh"
+  },
+  "body": "{\"name\": \"asgard\",\"url\": \"job/asgard/\",\"build\": {\"full_url\": \"http://localhost:8080/job/asgard/18/\",\"number\": 18,\"phase\": \"COMPLETED\",\"status\": \"SUCCESS\",\"url\": \"job/asgard/18/\",\"scm\": {\"url\": \"https://github.com/evgeny-goldin/asgard.git\",\"branch\": \"origin/master\",\"commit\": \"c6d86dc654b12425e706bcf951adfe5a8627a517\"},\"artifacts\": {\"asgard.war\": {\"archive\": \"http://localhost:8080/job/asgard/18/artifact/asgard.war\"},\"asgard-standalone.jar\": {\"archive\": \"http://localhost:8080/job/asgard/18/artifact/asgard-standalone.jar\",\"s3\": \"https://s3-eu-west-1.amazonaws.com/evgenyg-bakery/asgard/asgard-standalone.jar\"}}}}",
+  "isBase64Encoded": false,
+  "build": "undefined"
 }
+
+
