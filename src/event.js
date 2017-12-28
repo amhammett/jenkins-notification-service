@@ -43,8 +43,10 @@ module.exports.event = (event, context, callback) => {
   if(
     jenkins_data.build
     && jenkins_data.build.phase === 'FINALIZED'
-    && jenkins_data.build.status === 'FAILED'
+    && jenkins_data.build.status === 'FAILURE'
   ) {
+    console.log('failure detected')
+
     let params = {
       StreamName: failure_stream,
       Data: JSON.stringify(event),
@@ -62,8 +64,8 @@ module.exports.event = (event, context, callback) => {
         });
         return;
       }
+
       console.log('successfully put kinesis record: ')
-      console.log(data)
       callback(null, {
         statusCode: 200,
         headers: { 'Access-Control-Allow-Origin': '*' },
