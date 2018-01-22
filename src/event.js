@@ -65,7 +65,7 @@ module.exports.event = (event, context, callback) => {
         return;
       }
 
-      console.log('successfully put kinesis record: ')
+      console.log('successfully put kinesis record')
       callback(null, {
         statusCode: 200,
         headers: { 'Access-Control-Allow-Origin': '*' },
