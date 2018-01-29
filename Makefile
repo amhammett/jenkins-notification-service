@@ -8,7 +8,7 @@ stage := v1
 allow_cidr := x.x.x.x
 
 AWS_PARAMS=AWS_PROFILE=$(profile) AWS_DEFAULT_REGION=${region}
-LAMBDA_PARAMS=FAILURE_ENDPOINT="${failure_endpoint}" ALLOW_CIDR="$(allow_cidr)" ENV=${env}
+LAMBDA_PARAMS=ALLOW_CIDR="$(allow_cidr)" ENV=${env}
 
 local-invoke:
 	${AWS_PARAMS} ${LAMBDA_PARAMS} ./node_modules/.bin/lambda-local -t 20 -f $(function_file) -e $(event_file)
